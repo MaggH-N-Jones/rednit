@@ -6,6 +6,8 @@ body {
     background-color: rgb(112, 112, 255);
     margin: 0;
     height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 img {
@@ -13,14 +15,27 @@ img {
 }
 
 .topnav {
-    background-color: bisque;
+    background-color: rgb(255, 112, 255);
     overflow: hidden;
     display: flex;
     justify-content: space-between;
     padding: 5px;
     align-items: center;
 }
-    
-.topnav a:hover{
-    color:black;
+
+.topnav a:hover {
+    color: black;
+}
+
+.placement {
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+}
+
+.placement button {
+    width: 80px;
+    padding: 5px;
+    margin: 5px;
 }
