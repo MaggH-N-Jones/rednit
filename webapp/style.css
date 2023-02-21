@@ -1,0 +1,26 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background-color: rgb(112, 112, 255);
+    margin: 0;
+    height: 100vh;
+}
+
+img {
+    width: 40px;
+}
+
+.topnav {
+    background-color: bisque;
+    overflow: hidden;
+    display: flex;
+    justify-content: space-between;
+    padding: 5px;
+    align-items: center;
+}
+    
+.topnav a:hover{
+    color:black;
+}
