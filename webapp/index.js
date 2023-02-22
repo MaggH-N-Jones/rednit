@@ -1,10 +1,5 @@
-let loginButton = document.getElementById("loginButton");
-let signupButton = document.getElementById("signupButton");
-
-/**
- * 
- * @param {string} pagePath 
- */
+let loginButton = document.getElementById("login-button");
+let signupButton = document.getElementById("signup-button");
 
 function redirectToPage(pagePath) {
     window.location.pathname = pagePath
