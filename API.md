@@ -26,7 +26,7 @@ POST /api/users/login
 ```
 #### Request
 ```typescript
-type UsersRegisterRequest = {
+type UsersLoginRequest = {
     username: string,
     password: string,
 }
@@ -34,7 +34,7 @@ type UsersRegisterRequest = {
 
 #### Response
 ```typescript
-type UsersRegisterResponse = {
+type UsersLoginResponse = {
     ok: boolean,
     errorMessage?: "Invalid username" | "Invalid password" | string,
 }
