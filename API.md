@@ -37,5 +37,6 @@ type UsersLoginRequest = {
 type UsersLoginResponse = {
     ok: boolean,
     errorMessage?: "Invalid username" | "Invalid password" | string,
+    token?: string;
 }
 ```
