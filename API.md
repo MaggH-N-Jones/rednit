@@ -4,11 +4,13 @@
 ```
 POST /api/users/register
 ```
-#### Request
+#### Request body
 ```typescript
 type UsersRegisterRequest = {
     username: string,
     password: string,
+    name: string,
+    age: int,
 }
 ```
 
@@ -24,7 +26,7 @@ type UsersRegisterResponse = {
 ```
 POST /api/users/login
 ```
-#### Request
+#### Request body
 ```typescript
 type UsersLoginRequest = {
     username: string,
@@ -38,5 +40,31 @@ type UsersLoginResponse = {
     ok: boolean,
     errorMessage?: "Invalid username" | "Invalid password" | string,
     token?: string;
+}
+```
+
+## Swiper
+### Candidate
+```
+GET /api/swiper/candidate
+```
+#### Request query parameters
+```typescript
+type SwiperCandidateRequest = {
+    token: string;
+}
+```
+#### Response
+```typescript
+type Candidate = {
+    id: int,
+    picture: string,
+    name: string,
+    age: int;
+}
+type SwiperCandidateResponse = {
+    ok: boolean,
+    errorMessage?: "No Valid Candidates" | "Unauthorized" | string,
+    candidate: Candidate;
 }
 ```

@@ -49,3 +49,7 @@ img {
     padding: 5px;
     margin: 5px;
 }
+
+.placement :no-button{
+    align-self: flex-start;
+}
