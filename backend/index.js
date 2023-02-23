@@ -1,15 +1,15 @@
 const express = require("express");
 const cors = require("cors");
 const path = require("path");
-
+const {makeUserLoginRoute, makeUserRegisterRoute}=require("./users")
 const port = 8000;
 
 let database = {
     users: [
-        { username: "riemer", password: "1234" },
-        { username: "thies", password: "1234" },
-        { username: "tæis", password: "1234" },
-        { username: "mikel", password: "1234" },
+        { id: 0, username: "riemer", password: "1234", name: "reimer", age: 25, pictures: ["https://www.dmarge.com/wp-content/uploads/2021/01/dwayne-the-rock-.jpg"]},
+        { id: 1, username: "thies", password: "1234", name: "reimer", age: 26, pictures: ["https://www.incimages.com/uploaded_files/image/1920x1080/getty_481292845_77896.jpg"]},
+        { id: 2, username: "tæis", password: "1234", name: "reimer", age: 23, pictures: ["https://cdn.shopify.com/s/files/1/0850/2114/files/tips_to_help_heighten_senses_480x480.png?v=1624399167"]},
+        { id: 3, username: "mikel", password: "1234", name: "reimer", age: 27, pictures: ["https://cdn.hswstatic.com/gif/play/0b7f4e9b-f59c-4024-9f06-b3dc12850ab7-1920-1080.jpg"]},
     ],
     sessions: [],
 };
@@ -24,61 +24,8 @@ app.use((err, _req, res, _next) => {
         console.error(`${new Date().toISOString()} [API]: Recieved request with invalid JSON request body`);
     res.status(400).json({ error: err })
 });
-
-app.post("/api/users/register", (req, res) => {
-    if (!req.body.username || !req.body.password || typeof req.body.username !== "string" || typeof req.body.password !== "string") {
-        return res.status(400).json({
-            ok: false,
-            errorMessage: "Invalid request",
-        });
-    }
-    const user = {
-        username: req.body.username,
-        password: req.body.password,
-    };
-    if (username === "") {
-        return res.status(400).json({
-            ok: false,
-            errorMessage: "Invalid username",
-        });
-    }
-    if (database.users.find(({ username }) => username == user.username) !== undefined) {
-        return res.status(400).json({
-            ok: false,
-            errorMessage: "Username already in use",
-        });
-    }
-    database.users.push(user);
-    return res.status(200).json({ ok: true });
-});
-
-app.post("/api/users/login", (req, res) => {
-    if (!req.body.username || !req.body.password || typeof req.body.username !== "string" || typeof req.body.password !== "string") {
-        return res.status(400).json({
-            ok: false,
-            errorMessage: "Invalid request",
-        });
-    }
-    const credentials = {
-        username: req.body.username,
-        password: req.body.password,
-    };
-    const user = database.users.find(({ username }) => username == credentials.username);
-    if (!user) {
-        return res.status(400).json({
-            ok: false,
-            errorMessage: "Invalid username",
-        });
-    }
-    if (user.password !== credentials.password) {
-        return res.status(400).json({
-            ok: false,
-            errorMessage: "Invalid password",
-        });
-    }
-    const token = Math.round(Math.random() * (10 ** 6)).toString();
-    return res.status(200).json({ ok: true, token });
-});
+makeUserRegisterRoute(app, database);
+makeUserLoginRoute(app, database);
 
 app.use("/", express.static(path.join(__dirname, "../webapp")))
 
