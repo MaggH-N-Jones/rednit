@@ -3,7 +3,7 @@
 }
 
 body {
-    background-color: rgb(112, 112, 255);
+    background-color: rgb(146, 225, 234);
     margin: 0;
     height: 100vh;
     display: flex;
@@ -15,7 +15,7 @@ img {
 }
 
 .topnav {
-    background-color: rgb(255, 112, 255);
+    background-color: rgb(196, 195, 201);
     overflow: hidden;
     display: flex;
     justify-content: space-between;
@@ -23,8 +23,13 @@ img {
     align-items: center;
 }
 
-.topnav a:hover {
+.topnav a {
     color: black;
+    text-decoration: none;
+}
+
+.topnav a:hover {
+    text-decoration: underline;
 }
 
 .placement {
