@@ -14,6 +14,26 @@ function makeSwiperCandidateRoute(app, database) {
                 errorMessage: "Unauthorized",
             });
         }
-
+        const user = database.users.find(({ id }) => id === session.userId);
+        if (!user) {
+            return res.status(500).json({
+                ok: false,
+                errorMessage: "Could not find user",
+            });
+        }
+        const allOtherUsers = database.users.filter((otherUser) => otherUser.id !== user.id)
+        const randomUser = allOtherUsers[Math.floor(Math.random() * allOtherUsers.length)]
+        const candidate = {
+            id: randomUser.id,
+            picture: firstPictureOrPlaceholder(randomUser),
+            name: randomUser.name,
+            age: randomUser.age,
+        }
     })
+}
+function firstPictureOrPlaceholder(user) {
+    if (user.pictures.length > 0)
+        return user.pictures[0]
+    else
+        return "https://http.cat/404"
 }

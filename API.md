@@ -57,6 +57,7 @@ type SwiperCandidateRequest = {
 #### Response
 ```typescript
 type Candidate = {
+    id: int,
     picture: string,
     name: string,
     age: int;

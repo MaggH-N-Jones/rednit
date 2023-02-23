@@ -46,7 +46,7 @@ function makeUserLoginRoute(app, database) {
             username: req.body.username,
             password: req.body.password,
         };
-        const user = database.users.find(({ username }) => username == credentials.username);
+        const user = database.users.find(({ username }) => username === credentials.username);
         if (!user) {
             return res.status(400).json({
                 ok: false,
