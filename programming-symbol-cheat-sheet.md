@@ -13,10 +13,10 @@ Karakter | Navn | Taste-kombination | Andre navne
 `;` | Semi-Kolon | `Shift + ','` |
 `' '` | Single-quotes | `"'"` (Til højre for `'Ø'`) | 
 `" "` | Double-quotes | `Shift + 2` |
-\` \` | Backtick-(quotes) | `Shift + '´'` (tryk 2 gange) | 
+\` \` | Backtick-(quotes) | `Shift + '´'` (Til venstre for Backspace, tryk 2 gange) | 
 `/` | Slash | `Shift + 7` | Skrå-streg
 `\` | Back-Slash | `AltGr + '<'` |
-`\|` | Pipe | `AltGr + '´'` (Til venstre for Backspace) | Line-symbol
+`\|` | Pipe | `AltGr + '´'` (Til venstre for Backspace, tryk 2 gange) | Line-symbol
 `-` | Minus | `'-'` (Til venstre for HøjreShift) | Binde-streg, Dash, Hyphen
 `_` | Underscore | `Shift + '-'` | Under-streg
 
