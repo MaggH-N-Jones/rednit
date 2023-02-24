@@ -65,6 +65,6 @@ type Candidate = {
 type SwiperCandidateResponse = {
     ok: boolean,
     errorMessage?: "No Valid Candidates" | "Unauthorized" | string,
-    candidate: Candidate;
+    candidate?: Candidate;
 }
 ```
