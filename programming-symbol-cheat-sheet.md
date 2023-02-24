@@ -13,7 +13,7 @@ Karakter | Navn | Taste-kombination | Andre navne
 `;` | Semi-Kolon | `Shift + ','` |
 `' '` | Single-quotes | `"'"` (Til højre for `'Ø'`) | 
 `" "` | Double-quotes | `Shift + 2` |
-\` \` | Backtick-(quotes) | `` 
+\` \` | Backtick-(quotes) | `Shift + '''` (tryk 2 gange) | 
 `/` | Slash | `Shift + 7` | Skrå-streg
 `\` | Back-Slash | `AltGr + '<'` |
 `\|` | Pipe | `AltGr + '´'` (Til venstre for Backspace) | Line-symbol
