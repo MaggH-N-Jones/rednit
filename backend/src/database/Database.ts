@@ -1,5 +1,7 @@
+import { User } from "../users/User";
+
 export interface Database {
-    doesUserWithUsernameAlreadyExist(username: string): Promise<boolean>;
-
-
+    doesUserWithUsernameExist(username: string): Promise<boolean>;
+    addUser(user: User): Promise<void>;
+    uniqueUserId(): Promise<number>;
 }

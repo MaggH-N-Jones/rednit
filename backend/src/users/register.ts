@@ -1,4 +1,5 @@
 import { Database } from "../database/Database"
+import { User } from "./User"
 
 export type RegisterRequest = {
     username: string,
@@ -7,6 +8,7 @@ export type RegisterRequest = {
     age: number,
 
 }
+
 export type RegisterResponse = {
     ok: true,
 } | {
@@ -16,29 +18,40 @@ export type RegisterResponse = {
     | "Invalid username"
     | "Invalid name",
 }
-export async function register(request: RegisterRequest, db: Database): Promise<RegisterResponse> {
-    if (await db.doesUserWithUsernameAlreadyExist(request.username)) {
-        return {
-            ok: false,
-            errorMessage: "Username already in use"
-        }
-    }
+
+export async function register(
+    request: RegisterRequest,
+    db: Database,
+): Promise<RegisterResponse> {
     if (request.name == "") {
         return {
             ok: false,
             errorMessage: "Invalid name"
         }
     }
-    else if (request.username == "") {
+    if (request.username == "") {
         return {
             ok: false,
             errorMessage: "Invalid username"
         }
     }
-    else {
+    if (await db.doesUserWithUsernameExist(request.username)) {
         return {
-            ok: true,
+            ok: false,
+            errorMessage: "Username already in use"
         }
+    }
+    const user: User = {
+        username: request.username,
+        password: request.password,
+        name: request.name,
+        age: request.age,
+        id: await db.uniqueUserId(),
+    }
+    db.addUser(user)
+
+    return {
+        ok: true,
     }
 
 }
