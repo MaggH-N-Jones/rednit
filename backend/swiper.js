@@ -1,7 +1,7 @@
 function makeSwiperCandidateRoute(app, database) {
     app.get("/api/swiper/candidate", (req, res) => {
         if (!req.query.token) {
-            return req.status(400).json({
+            return res.status(400).json({
                 ok: false,
                 errorMessage: "Unauthorized",
             });
@@ -9,7 +9,7 @@ function makeSwiperCandidateRoute(app, database) {
         const token = req.query.token
         const session = database.sessions.find((session) => session.token === token);
         if (!session) {
-            return req.status(400).json({
+            return res.status(400).json({
                 ok: false,
                 errorMessage: "Unauthorized",
             });
@@ -29,11 +29,15 @@ function makeSwiperCandidateRoute(app, database) {
             name: randomUser.name,
             age: randomUser.age,
         }
+        res.status(200).json({
+            ok: true,
+            candidate: candidate
+        })
     })
 }
 function makeSwiperMatchRoute(app, database) {
     app.post("/api/swiper/match", (req, res) => {
-        if(!req.body.token || req.body.swiped === undefined || typeof req.body.token !== "string" || typeof req.body.swiped !== "number"){
+        if (!req.body.token || req.body.swiped === undefined || typeof req.body.token !== "string" || typeof req.body.swiped !== "number") {
             return res.status(400).json({
                 ok: false,
                 errorMessage: "Invalid request",
@@ -54,7 +58,7 @@ function makeSwiperMatchRoute(app, database) {
                 errorMessage: "Unknown user",
             });
         }
-        database.matches.push({swiper: session.userId, swiped: swipedUser.id})
+        database.matches.push({ swiper: session.userId, swiped: swipedUser.id })
     })
 }
 function firstPictureOrPlaceholder(user) {
@@ -63,3 +67,4 @@ function firstPictureOrPlaceholder(user) {
     else
         return "https://http.cat/404"
 }
+module.exports = { makeSwiperMatchRoute, makeSwiperCandidateRoute }
