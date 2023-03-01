@@ -68,3 +68,22 @@ type SwiperCandidateResponse = {
     candidate?: Candidate;
 }
 ```
+### Match
+```
+POST /api/swiper/match
+```
+#### Request body
+```typescript
+type SwiperMatchRequest = {
+    token: string,
+    swiped: int; //userID
+}
+```
+
+#### Response
+```typescript
+type SwiperMatchResponse = {
+    ok: boolean,
+    errorMessage?: "Unauthorized" | "Invalid request" | "Unknown user" | string,
+}
+```

@@ -31,6 +31,32 @@ function makeSwiperCandidateRoute(app, database) {
         }
     })
 }
+function makeSwiperMatchRoute(app, database) {
+    app.post("/api/swiper/match", (req, res) => {
+        if(!req.body.token || req.body.swiped === undefined || typeof req.body.token !== "string" || typeof req.body.swiped !== "number"){
+            return res.status(400).json({
+                ok: false,
+                errorMessage: "Invalid request",
+            })
+        }
+        const token = req.query.token
+        const session = database.sessions.find((session) => session.token === token);
+        if (!session) {
+            return req.status(400).json({
+                ok: false,
+                errorMessage: "Unauthorized",
+            });
+        }
+        const swipedUser = database.users.find(({ id }) => id === req.body.swiped);
+        if (!swipedUser) {
+            return res.status(500).json({
+                ok: false,
+                errorMessage: "Unknown user",
+            });
+        }
+        database.matches.push({swiper: session.userId, swiped: swipedUser.id})
+    })
+}
 function firstPictureOrPlaceholder(user) {
     if (user.pictures.length > 0)
         return user.pictures[0]
