@@ -16,12 +16,7 @@ function makeUserRegisterRoute(app, database) {
             age: req.body.age,
             pictures: []
         };
-        if (username === "") {
-            return res.status(400).json({
-                ok: false,
-                errorMessage: "Invalid username",
-            });
-        }
+        
         if (database.users.find(({ username }) => username == user.username) !== undefined) {
             return res.status(400).json({
                 ok: false,

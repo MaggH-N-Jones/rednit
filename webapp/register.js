@@ -20,10 +20,16 @@ registerButton.addEventListener("click", async () => {
     let username = usernameInput.value;
     let password = passwordInput.value;
     let name = nameInput.value;
-    let age = ageInput.value;
+    let ageString = ageInput.value;
 
-    if (containsEmptyField([username, password, name, age])) {
+    if (containsEmptyField([username, password, name, ageString])) {
         alert("Failed to register: Field cannot be empty");
+        return;
+    }
+
+    let age = parseInt(ageString)
+    if(age === 0 || isNaN(age)){
+        alert("Failed to register: Invalid age");
         return;
     }
 
