@@ -43,22 +43,25 @@ function makeSwiperMatchRoute(app, database) {
                 errorMessage: "Invalid request",
             })
         }
-        const token = req.query.token
+        const token = req.body.token
         const session = database.sessions.find((session) => session.token === token);
         if (!session) {
-            return req.status(400).json({
+            return res.status(400).json({
                 ok: false,
                 errorMessage: "Unauthorized",
             });
         }
         const swipedUser = database.users.find(({ id }) => id === req.body.swiped);
         if (!swipedUser) {
-            return res.status(500).json({
+            return res.status(400).json({
                 ok: false,
                 errorMessage: "Unknown user",
             });
         }
         database.matches.push({ swiper: session.userId, swiped: swipedUser.id })
+        res.status(200).json({
+            ok: true,
+        })
     })
 }
 function firstPictureOrPlaceholder(user) {
