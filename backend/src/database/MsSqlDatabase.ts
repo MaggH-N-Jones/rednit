@@ -1,5 +1,5 @@
 import { User } from "../users/User";
-import { Database } from "./Database"
+import { Database } from "./Database";
 import mssql, { ConnectionPool } from "mssql";
 
 export class MsSqlDatabase implements Database {
@@ -21,7 +21,7 @@ export class MsSqlDatabase implements Database {
 
     async doesUserWithUsernameExist(username: string): Promise<boolean> {
         const request = new mssql.Request(this.connection);
-        request.input("username", username)
+        request.input("username", username);
         try {
             const users = await request.query("SELECT * FROM users WHERE username=@username;")
             return users.recordset.length > 0;
@@ -29,36 +29,40 @@ export class MsSqlDatabase implements Database {
             return true;
         }
     }
+
     async addUser(user: User): Promise<void> {
         const request = new mssql.Request(this.connection);
-        request.input("id", user.id)
-        request.input("username", user.username)
-        request.input("password", user.password)
-        request.input("name", user.name)
-        request.input("age", user.age)
+        request.input("id", user.id);
+        request.input("username", user.username);
+        request.input("password", user.password);
+        request.input("name", user.name);
+        request.input("age", user.age);
         try {
+            //
             await request.query(`
-                INSERT INTO table_name (id, username, password, name, age) 
+                INSERT INTO table_name (id, username, password, name, age);
                 VALUES (@id, @username, @password, @name, @age);
             `)
         } catch {
+            //
         }
     }
+
     async uniqueUserId(): Promise<number> {
         const id = this.userIdCounter;
         this.userIdCounter += 1;
         return id;
     }
+
     async isUsersPasswordCorrect(username: string, password: string): Promise<boolean> {
         const request = new mssql.Request(this.connection);
-        request.input("username", username)
-        request.input("password", password)
+        request.input("username", username);
+        request.input("password", password);
         try {
             const users = await request.query("SELECT * FROM users WHERE username=@username AND password=@password;")
             return users.recordset.length > 0;
         } catch {
-            return true;
+            return false;
         }
     }
-    
 }
