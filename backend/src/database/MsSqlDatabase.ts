@@ -1,13 +1,16 @@
 import { User } from "../users/User";
-import { Database } from "./Database";
-import mssql, { ConnectionPool } from "mssql";
+import { Database, DatabaseError } from "./Database";
+import { ConnectionPool, Request as SqlRequest } from "mssql";
+import { error, ok, Result as ResultType } from "../utils/Result";
+
+type Result<T> = Promise<ResultType<T, MsSqlDatabaseError>>
 
 export class MsSqlDatabase implements Database {
 
     private connection: ConnectionPool;
     private userIdCounter = 0;
 
-    constructor() {
+    public constructor() {
         var config = {
             user: 'sa',
             password: 'mypassword',
@@ -19,90 +22,91 @@ export class MsSqlDatabase implements Database {
         this.connection = newConnection;
     }
 
-    async doesUserWithUsernameExist(username: string): Promise<boolean> {
-        const request = new mssql.Request(this.connection);
+    public async doesUserWithUsernameExist(username: string): Result<boolean> {
+        const request = new SqlRequest(this.connection);
         request.input("username", username);
         try {
             const users = await request.query("SELECT * FROM users WHERE username=@username;")
-            return users.recordset.length > 0;
+            return ok(users.recordset.length > 0);
         } catch {
-            return true;
+            return error(new MsSqlDatabaseError("mssql failure"));
         }
     }
 
-    async addUser(user: User): Promise<void> {
-        const request = new mssql.Request(this.connection);
+    public async addUser(user: User): Result<void> {
+        const request = new SqlRequest(this.connection);
         request.input("id", user.id);
         request.input("username", user.username);
         request.input("password", user.password);
         request.input("name", user.name);
         request.input("age", user.age);
         try {
-            //
             await request.query(`
                 INSERT INTO table_name (id, username, password, name, age);
                 VALUES (@id, @username, @password, @name, @age);
             `)
+            return ok(undefined);
         } catch {
-            //
+            return error(new MsSqlDatabaseError("mssql failure"));
         }
     }
 
-    async uniqueUserId(): Promise<number> {
+    public async uniqueUserId(): Result<number> {
         const id = this.userIdCounter;
         this.userIdCounter += 1;
-        return id;
+        return ok(id);
     }
 
-    async isUsersPasswordCorrect(username: string, password: string): Promise<boolean> {
-        const request = new mssql.Request(this.connection);
+    public async isUsersPasswordCorrect(username: string, password: string): Result<boolean> {
+        const request = new SqlRequest(this.connection);
         request.input("username", username);
         request.input("password", password);
         try {
             const users = await request.query("SELECT * FROM users WHERE username=@username AND password=@password;")
-            return users.recordset.length > 0;
+            return ok(users.recordset.length > 0);
         } catch {
-            return false;
+            return error(new MsSqlDatabaseError("mssql failure"));
         }
     }
 
-    async userById(userId: number): Promise<User | null> {
-        const request = new mssql.Request(this.connection);
+    public async userById(userId: number): Result<User | null> {
+        const request = new SqlRequest(this.connection);
         request.input("id", userId);
         try {
             const result = await request.query("SELECT * FROM users WHERE id=@id");
-            if (result.recordset.length === 0) {
-                return null;
-            } else if (result.recordset.length === 1) {
-                return result.recordset[0];
-            }
-            else {
-                // TODO
-                throw new Error("TODO")
-            }
+            if (result.recordset.length === 0)
+                return ok(null);
+            else if (result.recordset.length === 1)
+                return ok(result.recordset[0]);
+            else
+                return error(new MsSqlDatabaseError("multiple users with same id"));
         } catch {
-            // TODO
-            throw new Error("TODO")
+            return error(new MsSqlDatabaseError("mssql failure"));
         }
     }
 
-    async userByUsername(username: string): Promise<User | null> {
-        const request = new mssql.Request(this.connection);
+    public async userByUsername(username: string): Result<User | null> {
+        const request = new SqlRequest(this.connection);
         request.input("username", username);
         try {
             const result = await request.query("SELECT * FROM users WHERE username=@username");
-            if (result.recordset.length === 0) {
-                return null;
-            } else if (result.recordset.length === 1) {
-                return result.recordset[0];
-            }
-            else {
-                // TODO
-                throw new Error("TODO")
-            }
+            if (result.recordset.length === 0)
+                return ok(null);
+            else if (result.recordset.length === 1)
+                return ok(result.recordset[0]);
+            else
+                return error(new MsSqlDatabaseError("multiple users with same username"));
         } catch {
-            // TODO
-            throw new Error("TODO")
+            return error(new MsSqlDatabaseError("mssql failure"));
         }
     }
 }
+
+export class MsSqlDatabaseError implements DatabaseError {
+    public constructor(private messageText: string) { }
+
+    public message(): string {
+        return this.messageText;
+    }
+}
+

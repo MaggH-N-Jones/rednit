@@ -14,6 +14,7 @@ export type RegisterResponse = {
 } | {
     ok: false,
     errorMessage:
+    | "Server error"
     | "Username already in use"
     | "Invalid username"
     | "Invalid name",
@@ -35,10 +36,24 @@ export async function register(
             errorMessage: "Invalid username"
         }
     }
-    if (await db.doesUserWithUsernameExist(request.username)) {
+    const existsResult = await db.doesUserWithUsernameExist(request.username);
+    if (!existsResult.ok) {
+        return {
+            ok: false,
+            errorMessage: "Server error",
+        }
+    }
+    if (existsResult.value) {
         return {
             ok: false,
             errorMessage: "Username already in use"
+        }
+    }
+    const id = await db.uniqueUserId();
+    if (!id.ok) {
+        return {
+            ok: false,
+            errorMessage: "Server error",
         }
     }
     const user: User = {
@@ -46,7 +61,7 @@ export async function register(
         password: request.password,
         name: request.name,
         age: request.age,
-        id: await db.uniqueUserId(),
+        id: id.value,
     }
     db.addUser(user)
 

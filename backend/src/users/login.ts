@@ -11,6 +11,7 @@ export type LoginResponse = {
 } | {
     ok: false,
     errorMessage:
+    | "Server error"
     | "Invalid username"
     | "Invalid password"
 }
@@ -19,14 +20,20 @@ export async function login(
     request: LoginRequest,
     db: Database,
 ): Promise<LoginResponse> {
-    const user = await db.userByUsername(request.username);
-    if (!user) {
+    const userResult = await db.userByUsername(request.username);
+    if (!userResult.ok) {
+        return {
+            ok: false,
+            errorMessage: "Server error",
+        };
+    }
+    if (!userResult.value) {
         return {
             ok: false,
             errorMessage: "Invalid username",
         };
     }
-    if (user.password !== request.password) {
+    if (userResult.value.password !== request.password) {
         return {
             ok: false,
             errorMessage: "Invalid password"

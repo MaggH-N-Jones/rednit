@@ -1,5 +1,5 @@
-import { Database } from "../database/Database"
 import { MockDatabase } from "../database/MockDatabase"
+import { asOk } from "../utils/Result"
 import { register, RegisterRequest } from "./register"
 
 it("should fail if username is empty", async () => {
@@ -15,7 +15,6 @@ it("should fail if username is empty", async () => {
     if (!response.ok) {
         expect(response.errorMessage).toBe("Invalid username")
     }
-
 })
 
 it("should fail if name is empty", async () => {
@@ -79,7 +78,8 @@ it("should put user into database", async () => {
     const response = await register(request, db)
     expect(response.ok).toBe(true)
     const result = await db.doesUserWithUsernameExist("username")
-    expect(result).toBe(true)
+    expect(result.ok).toBe(true)
+    expect(asOk(result).value).toBe(true)
 })
 
 it("should contain id given by database", async () => {
@@ -95,6 +95,6 @@ it("should contain id given by database", async () => {
     const response = await register(request, db)
     expect(response.ok).toBe(true)
     const createdUser = await db.userById(expectedId)
-    expect(createdUser).not.toBe(null)
-    expect(createdUser?.username).toBe(request.username)
+    expect(createdUser.ok).toBe(true)
+    expect(asOk(createdUser).value?.username).toBe(request.username)
 })

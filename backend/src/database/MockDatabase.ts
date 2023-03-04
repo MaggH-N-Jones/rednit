@@ -1,26 +1,39 @@
 import { User } from "../users/User";
-import { Database } from "./Database";
+import { ok, Result as ResultType } from "../utils/Result";
+import { Database, DatabaseError } from "./Database";
+
+type Result<T> = Promise<ResultType<T, MockDatabaseError>>;
 
 export class MockDatabase implements Database {
     private users: User[] = []
     public userIdCounter = 0;
 
-    public async doesUserWithUsernameExist(username: string): Promise<boolean> {
+    public async doesUserWithUsernameExist(username: string): Result<boolean> {
         const user = this.users.find(user => user.username == username);
-        return user !== undefined
+        return ok(user !== undefined)
     }
-    public async addUser(user: User): Promise<void> {
+    public async addUser(user: User): Result<void> {
         this.users.push(user)
+        return ok(undefined);
     }
-    public async uniqueUserId(): Promise<number> {
+    public async uniqueUserId(): Result<number> {
         const id = this.userIdCounter;
         this.userIdCounter += 1;
-        return id;
+        return ok(id);
     }
-    public async userById(userId: number): Promise<User | null> {
-        return this.users.find((user) => user.id === userId) ?? null;
+    public async userById(userId: number): Result<User | null> {
+        return ok(this.users.find((user) => user.id === userId) ?? null);
     }
-    public async userByUsername(username: string): Promise<User | null> {
-        return this.users.find((user) => user.username === username) ?? null;
+    public async userByUsername(username: string): Result<User | null> {
+        return ok(this.users.find((user) => user.username === username) ?? null);
     }
 }
+
+export class MockDatabaseError implements DatabaseError {
+    public constructor(private messageText: string) { }
+
+    public message(): string {
+        return this.messageText;
+    }
+}
+
