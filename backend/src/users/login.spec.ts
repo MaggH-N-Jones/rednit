@@ -1,17 +1,20 @@
-import { Database } from "../database/Database"
 import { MockDatabase } from "../database/MockDatabase"
-import { login, loginRequest } from "./login"
+import { login, LoginRequest } from "./login"
+import { User } from "./User";
+
+function testUser(): User {
+    return {
+        id: 0,
+        username: "terryd",
+        password: "1234",
+        name: "Terry A. Davis",
+        age: 42,
+    };
+}
 
 it("should fail if username does not exist", async () => {
     const db = new MockDatabase()
-    db.addUser({
-        age: 924,
-        id: 38134,
-        name: "henrik",
-        password: "dinmor",
-        username: "gamerrr"
-    })
-    const request: loginRequest = {
+    const request: LoginRequest = {
         username: "gamer",
         password: "dinmor",
     }
@@ -24,16 +27,11 @@ it("should fail if username does not exist", async () => {
 
 it("should fail if password is wrong", async () => {
     const db = new MockDatabase()
-    db.addUser({
-        age: 924,
-        id: 38134,
-        name: "henrik",
-        password: "dinmor",
-        username: "gamerrr"
-    })
-    const request: loginRequest = {
-        username: "gamerrr",
-        password: "1234",
+    const user = testUser();
+    db.addUser(user)
+    const request: LoginRequest = {
+        username: user.username,
+        password: "incorrect password",
     }
     const response = await login(request, db)
     expect(response.ok).toBe(false)
@@ -44,18 +42,13 @@ it("should fail if password is wrong", async () => {
 
 it("should pass if username and password is correct", async () => {
     const db = new MockDatabase()
-    db.addUser({
-        age: 924,
-        id: 38134,
-        name: "henrik",
-        password: "dinmor",
-        username: "letmein"
-    })
-    const request: loginRequest = {
-        username: "letmein",
-        password: "dinmor",
+    const user = testUser();
+    db.addUser(user)
+    const request: LoginRequest = {
+        username: user.username,
+        password: user.password,
     }
     const response = await login(request, db)
     expect(response.ok).toBe(true)
-    
+
 })

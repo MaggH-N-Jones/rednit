@@ -17,15 +17,10 @@ export class MockDatabase implements Database {
         this.userIdCounter += 1;
         return id;
     }
-    public async userById(id: number): Promise<User | null>{
-        return this.users.find((user) => user.id === id) ?? null;
+    public async userById(userId: number): Promise<User | null> {
+        return this.users.find((user) => user.id === userId) ?? null;
     }
-    public async isUsersPasswordCorrect(username: string, password: string): Promise<boolean> {
-        const user = this.users.find(user => user.username == username);
-        if(user?.password === password){
-            return true
-        }
-        else 
-        return false
+    public async userByUsername(username: string): Promise<User | null> {
+        return this.users.find((user) => user.username === username) ?? null;
     }
 }

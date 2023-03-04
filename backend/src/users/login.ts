@@ -1,12 +1,12 @@
 import { Database } from "../database/Database"
 
-export type loginRequest = {
+export type LoginRequest = {
     username: string,
     password: string,
 
 }
 
-export type loginResponse = {
+export type LoginResponse = {
     ok: true,
 } | {
     ok: false,
@@ -16,16 +16,17 @@ export type loginResponse = {
 }
 
 export async function login(
-    request: loginRequest,
+    request: LoginRequest,
     db: Database,
-): Promise<loginResponse> {
-    if (!await db.doesUserWithUsernameExist(request.username)) {
+): Promise<LoginResponse> {
+    const user = await db.userByUsername(request.username);
+    if (!user) {
         return {
             ok: false,
-            errorMessage: "Invalid username"
-        }
+            errorMessage: "Invalid username",
+        };
     }
-    if (!await db.isUsersPasswordCorrect(request.username, request.password)) {
+    if (user.password !== request.password) {
         return {
             ok: false,
             errorMessage: "Invalid password"

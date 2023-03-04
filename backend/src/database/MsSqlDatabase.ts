@@ -11,10 +11,10 @@ export class MsSqlDatabase implements Database {
         var config = {
             user: 'sa',
             password: 'mypassword',
-            server: 'localhost', 
-            Database: 'SchoolDB' 
+            server: 'localhost',
+            Database: 'SchoolDB'
         };
-        
+
         const newConnection = new ConnectionPool(config);
         this.connection = newConnection;
     }
@@ -63,6 +63,46 @@ export class MsSqlDatabase implements Database {
             return users.recordset.length > 0;
         } catch {
             return false;
+        }
+    }
+
+    async userById(userId: number): Promise<User | null> {
+        const request = new mssql.Request(this.connection);
+        request.input("id", userId);
+        try {
+            const result = await request.query("SELECT * FROM users WHERE id=@id");
+            if (result.recordset.length === 0) {
+                return null;
+            } else if (result.recordset.length === 1) {
+                return result.recordset[0];
+            }
+            else {
+                // TODO
+                throw new Error("TODO")
+            }
+        } catch {
+            // TODO
+            throw new Error("TODO")
+        }
+    }
+
+    async userByUsername(username: string): Promise<User | null> {
+        const request = new mssql.Request(this.connection);
+        request.input("username", username);
+        try {
+            const result = await request.query("SELECT * FROM users WHERE username=@username");
+            if (result.recordset.length === 0) {
+                return null;
+            } else if (result.recordset.length === 1) {
+                return result.recordset[0];
+            }
+            else {
+                // TODO
+                throw new Error("TODO")
+            }
+        } catch {
+            // TODO
+            throw new Error("TODO")
         }
     }
 }

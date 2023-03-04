@@ -4,5 +4,6 @@ export interface Database {
     doesUserWithUsernameExist(username: string): Promise<boolean>;
     addUser(user: User): Promise<void>;
     uniqueUserId(): Promise<number>;
-    isUsersPasswordCorrect(username: string, password: string): Promise<boolean>;
+    userById(userId: number): Promise<User | null>
+    userByUsername(username: string): Promise<User | null>
 }
