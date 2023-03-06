@@ -1,6 +1,6 @@
 import { User } from "../users/User";
 import { Database, DatabaseError } from "./Database";
-import { ConnectionPool, Request as SqlRequest } from "mssql";
+import mssql, { ConnectionPool, Request } from "mssql";
 import { error, ok, Result as ResultType } from "../utils/Result";
 import { Session } from "../users/Session";
 import { Match } from "../swiper/MatchModel";
@@ -9,23 +9,16 @@ type Result<T> = Promise<ResultType<T, MsSqlDatabaseError>>
 
 export class MsSqlDatabase implements Database {
 
-    private connection: ConnectionPool;
+    private connection: ConnectionPool | undefined = undefined;
     private userIdCounter = 0;
 
-    public constructor() {
-        var config = {
-            user: 'sa',
-            password: 'mypassword',
-            server: 'localhost',
-            Database: 'SchoolDB'
-        };
-
-        const newConnection = new ConnectionPool(config);
-        this.connection = newConnection;
+    public async connect() {
+        //await mssql.connect("data source=PCVDATALAP108\\SQLEXPRESS2019;initial catalog=master;trusted_connection=true").catch(console.log)
+        await mssql.connect("Server=localhost,1433;Database=database;User Id=mhhv.skp;Password=Merc123456;Encrypt=false").catch(console.log)
     }
 
     public async userWithUsernameExist(username: string): Result<boolean> {
-        const request = new SqlRequest(this.connection);
+        const request = new Request(this.connection);
         request.input("username", username);
         try {
             const users = await request.query("SELECT * FROM users WHERE username=@username;")
@@ -36,7 +29,7 @@ export class MsSqlDatabase implements Database {
     }
 
     public async addUser(user: User): Result<void> {
-        const request = new SqlRequest(this.connection);
+        const request = new Request(this.connection);
         request.input("id", user.id);
         request.input("username", user.username);
         request.input("password", user.password);
@@ -60,7 +53,7 @@ export class MsSqlDatabase implements Database {
     }
 
     public async isUsersPasswordCorrect(username: string, password: string): Result<boolean> {
-        const request = new SqlRequest(this.connection);
+        const request = new Request(this.connection);
         request.input("username", username);
         request.input("password", password);
         try {
@@ -72,7 +65,7 @@ export class MsSqlDatabase implements Database {
     }
 
     public async userById(userId: number): Result<User | null> {
-        const request = new SqlRequest(this.connection);
+        const request = new Request(this.connection);
         request.input("id", userId);
         try {
             const result = await request.query("SELECT * FROM users WHERE id=@id");
@@ -88,7 +81,7 @@ export class MsSqlDatabase implements Database {
     }
 
     public async userByUsername(username: string): Result<User | null> {
-        const request = new SqlRequest(this.connection);
+        const request = new Request(this.connection);
         request.input("username", username);
         try {
             const result = await request.query("SELECT * FROM users WHERE username=@username");
