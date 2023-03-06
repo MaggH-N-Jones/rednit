@@ -2,6 +2,7 @@ import cors from "cors";
 import express, { json, urlencoded } from "express";
 import { ErrorRequestHandler } from "express";
 import { Database } from "../database/Database";
+import { usersRoutes } from "./users";
 
 export function api(db: Database) {
     const port = 8000;
@@ -12,9 +13,7 @@ export function api(db: Database) {
     app.use(urlencoded({ extended: true }));
     app.use(jsonError());
 
-    app.get("/api/hello", (req, res) => {
-        res.send("world");
-    })
+    usersRoutes(app, db);
 
     app.listen(port, () => {
         console.log(`Express running at http://localhost:${port}`);

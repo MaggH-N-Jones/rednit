@@ -8,3 +8,7 @@ export function generateToken(): string {
     return randstr(64);
 }
 
+export function responseStatusCode<R extends { ok: true } | { ok: false, errorMessage: "Server error" | string }>(response: R): number {
+    return response.ok ? 200 : response.errorMessage === "Server error" ? 500 : 400;
+}
+
