@@ -5,6 +5,11 @@ import { match } from "../swiper/match";
 import { responseStatusCode } from "../utils/utils";
 
 export function swiperRoutes(app: Express, db: Database) {
+    swiperCandidateRoute(app, db);
+    swiperMatchRoute(app, db);
+}
+
+export function swiperCandidateRoute(app: Express, db: Database) {
     app.get("/api/swiper/candidate", async (req, res) => {
         if (
             !req.query.token || typeof req.query.token !== "string"
@@ -20,6 +25,9 @@ export function swiperRoutes(app: Express, db: Database) {
         const response = await candidate(request, db);
         return res.status(responseStatusCode(response)).json(response);
     })
+}
+
+export function swiperMatchRoute(app: Express, db: Database) {
     app.post("/api/swiper/match", async (req, res) => {
         if (
             !req.body.token || typeof req.body.token !== "string"
@@ -37,5 +45,4 @@ export function swiperRoutes(app: Express, db: Database) {
         return res.status(responseStatusCode(response)).json(response);
     })
 }
-
 
