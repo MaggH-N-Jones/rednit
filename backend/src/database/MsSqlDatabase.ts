@@ -2,6 +2,7 @@ import { User } from "../users/User";
 import { Database, DatabaseError } from "./Database";
 import { ConnectionPool, Request as SqlRequest } from "mssql";
 import { error, ok, Result as ResultType } from "../utils/Result";
+import { Session } from "../users/Session";
 
 type Result<T> = Promise<ResultType<T, MsSqlDatabaseError>>
 
@@ -22,7 +23,7 @@ export class MsSqlDatabase implements Database {
         this.connection = newConnection;
     }
 
-    public async doesUserWithUsernameExist(username: string): Result<boolean> {
+    public async userWithUsernameExist(username: string): Result<boolean> {
         const request = new SqlRequest(this.connection);
         request.input("username", username);
         try {
@@ -99,6 +100,19 @@ export class MsSqlDatabase implements Database {
         } catch {
             return error(new MsSqlDatabaseError("mssql failure"));
         }
+    }
+
+    public async allUsersExceptWithId(id: number): Promise<ResultType<User[], DatabaseError>> {
+        throw new Error("not implemented")
+    }
+    public async addSession(session: Session): Promise<ResultType<void, DatabaseError>> {
+        throw new Error("not implemented")
+    }
+    public async uniqueSessionId(): Promise<ResultType<number, DatabaseError>> {
+        throw new Error("not implemented")
+    }
+    public async sessionByToken(token: string): Promise<ResultType<Session | null, DatabaseError>> {
+        throw new Error("not implemented")
     }
 }
 

@@ -36,7 +36,7 @@ export async function register(
             errorMessage: "Invalid username"
         }
     }
-    const existsResult = await db.doesUserWithUsernameExist(request.username);
+    const existsResult = await db.userWithUsernameExist(request.username);
     if (!existsResult.ok) {
         return {
             ok: false,

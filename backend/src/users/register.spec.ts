@@ -77,7 +77,7 @@ it("should put user into database", async () => {
     }
     const response = await register(request, db)
     expect(response.ok).toBe(true)
-    const result = await db.doesUserWithUsernameExist("username")
+    const result = await db.userWithUsernameExist("username")
     expect(result.ok).toBe(true)
     expect(asOk(result).value).toBe(true)
 })

@@ -1,3 +1,4 @@
+import { Session } from "../users/Session";
 import { User } from "../users/User";
 import { ok, Result as ResultType } from "../utils/Result";
 import { Database, DatabaseError } from "./Database";
@@ -8,7 +9,10 @@ export class MockDatabase implements Database {
     private users: User[] = []
     public userIdCounter = 0;
 
-    public async doesUserWithUsernameExist(username: string): Result<boolean> {
+    private sessions: Session[] = [];
+    public sessionIdCounter = 0;
+
+    public async userWithUsernameExist(username: string): Result<boolean> {
         const user = this.users.find(user => user.username == username);
         return ok(user !== undefined)
     }
@@ -26,6 +30,26 @@ export class MockDatabase implements Database {
     }
     public async userByUsername(username: string): Result<User | null> {
         return ok(this.users.find((user) => user.username === username) ?? null);
+    }
+    public async allUsersExceptWithId(id: number): Promise<ResultType<User[], DatabaseError>> {
+        return ok(this.users.filter((user) => user.id !== id));
+    }
+
+    public async addSession(session: Session): Result<void> {
+        this.sessions.push(session);
+        return ok(undefined);
+    }
+    public async uniqueSessionId(): Result<number> {
+        return ok(this.sessionIdCounter++);
+    }
+    public async sessionWithUserIdExists(userId: number): Result<boolean> {
+        return ok(this.sessions.find((session) => session.userId === userId) !== undefined);
+    }
+    public async sessionByToken(token: string): Promise<ResultType<Session | null, DatabaseError>> {
+        return ok(this.sessions.find((session) => session.token === token) ?? null);
+    }
+    public async sessionWithTokenExists(token: string): Result<boolean> {
+        return ok(this.sessions.find((session) => session.token === token) !== undefined);
     }
 }
 
