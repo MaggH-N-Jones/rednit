@@ -63,6 +63,9 @@ export class MockDatabase implements Database {
     public async uniqueMatchId(): Promise<ResultType<number, DatabaseError>> {
         return ok(this.matchIdCounter++);
     }
+    public async matchesBySwiperId(swiperId: number): Result<Match[]> {
+        return ok(this.matches.filter((match) => match.swiper === swiperId));
+    }
 }
 
 export class MockDatabaseError implements DatabaseError {
