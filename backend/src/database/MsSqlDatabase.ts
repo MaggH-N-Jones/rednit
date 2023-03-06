@@ -3,6 +3,7 @@ import { Database, DatabaseError } from "./Database";
 import { ConnectionPool, Request as SqlRequest } from "mssql";
 import { error, ok, Result as ResultType } from "../utils/Result";
 import { Session } from "../users/Session";
+import { Match } from "../swiper/MatchModel";
 
 type Result<T> = Promise<ResultType<T, MsSqlDatabaseError>>
 
@@ -112,6 +113,13 @@ export class MsSqlDatabase implements Database {
         throw new Error("not implemented")
     }
     public async sessionByToken(token: string): Promise<ResultType<Session | null, DatabaseError>> {
+        throw new Error("not implemented")
+    }
+
+    public async addMatch(match: Match): Promise<ResultType<void, DatabaseError>> {
+        throw new Error("not implemented")
+    }
+    public async uniqueMatchId(): Promise<ResultType<number, DatabaseError>> {
         throw new Error("not implemented")
     }
 }

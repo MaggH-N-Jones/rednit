@@ -1,3 +1,4 @@
+import { Match } from "../swiper/MatchModel";
 import { Session } from "../users/Session";
 import { User } from "../users/User";
 import { Result as ResultType } from "../utils/Result";
@@ -15,6 +16,9 @@ export interface Database {
     addSession(session: Session): Result<void>;
     uniqueSessionId(): Result<number>;
     sessionByToken(token: string): Result<Session | null>;
+
+    addMatch(match: Match): Result<void>;
+    uniqueMatchId(): Result<number>;
 }
 
 export interface DatabaseError {

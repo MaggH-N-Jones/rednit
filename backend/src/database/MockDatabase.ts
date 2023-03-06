@@ -1,3 +1,4 @@
+import { Match } from "../swiper/MatchModel";
 import { Session } from "../users/Session";
 import { User } from "../users/User";
 import { ok, Result as ResultType } from "../utils/Result";
@@ -11,6 +12,9 @@ export class MockDatabase implements Database {
 
     private sessions: Session[] = [];
     public sessionIdCounter = 0;
+
+    private matches: Match[] = [];
+    public matchIdCounter = 0;
 
     public async userWithUsernameExist(username: string): Result<boolean> {
         const user = this.users.find(user => user.username == username);
@@ -50,6 +54,14 @@ export class MockDatabase implements Database {
     }
     public async sessionWithTokenExists(token: string): Result<boolean> {
         return ok(this.sessions.find((session) => session.token === token) !== undefined);
+    }
+
+    public async addMatch(match: Match): Promise<ResultType<void, DatabaseError>> {
+        this.matches.push(match);
+        return ok(undefined);
+    }
+    public async uniqueMatchId(): Promise<ResultType<number, DatabaseError>> {
+        return ok(this.matchIdCounter++);
     }
 }
 
