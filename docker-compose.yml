@@ -11,6 +11,15 @@ services:
       MYSQL_ROOT_HOST: "%"
     volumes:
       - ./mariadb:/docker-entrypoint-initdb.d
+  mongodb:
+    image: mongodb/mongodb-community-server:6.0-ubi8
+    environment:
+      - MONGODB_INITDB_ROOT_USERNAME=user
+      - MONGODB_INITDB_ROOT_PASSWORD=pass
+    volumes:
+      - type: bind
+        source: ./mongodb-data
+        target: /data/db
   adminer:
     image: adminer
     restart: always
