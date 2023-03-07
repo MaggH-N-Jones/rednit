@@ -7,43 +7,43 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model match {
-  id                          Int  @id @default(autoincrement())
+model matches {
+  id                          Int   @id @default(autoincrement())
   swiper                      Int
   swiped                      Int
-  users_matches_swiperTousers user @relation("matches_swiperTousers", fields: [swiper], references: [id], onUpdate: Restrict, map: "matches_ibfk_1")
-  users_matches_swipedTousers user @relation("matches_swipedTousers", fields: [swiped], references: [id], onUpdate: Restrict, map: "matches_ibfk_2")
+  users_matches_swiperTousers users @relation("matches_swiperTousers", fields: [swiper], references: [id], onUpdate: Restrict, map: "matches_ibfk_1")
+  users_matches_swipedTousers users @relation("matches_swipedTousers", fields: [swiped], references: [id], onUpdate: Restrict, map: "matches_ibfk_2")
 
   @@index([swiped], map: "swiped")
   @@index([swiper], map: "swiper")
 }
 
-model picture {
+model pictures {
   id    Int    @id @default(autoincrement())
   url   String @db.Text
   user  Int
-  users user   @relation(fields: [user], references: [id], onUpdate: Restrict, map: "pictures_ibfk_1")
+  users users  @relation(fields: [user], references: [id], onUpdate: Restrict, map: "pictures_ibfk_1")
 
   @@index([user], map: "user")
 }
 
-model session {
+model sessions {
   id     Int    @id @default(autoincrement())
   userId Int
   token  String @db.Text
-  users  user   @relation(fields: [userId], references: [id], onUpdate: Restrict, map: "sessions_ibfk_1")
+  users  users  @relation(fields: [userId], references: [id], onUpdate: Restrict, map: "sessions_ibfk_1")
 
   @@index([userId], map: "userId")
 }
 
-model user {
-  id                            Int       @id @default(autoincrement())
-  username                      String    @db.Text
-  password                      String    @db.Text
-  name                          String    @db.Text
+model users {
+  id                            Int        @id @default(autoincrement())
+  username                      String     @db.Text
+  password                      String     @db.Text
+  name                          String     @db.Text
   age                           Int
-  matches_matches_swiperTousers match[]   @relation("matches_swiperTousers")
-  matches_matches_swipedTousers match[]   @relation("matches_swipedTousers")
-  pictures                      picture[]
-  sessions                      session[]
+  matches_matches_swiperTousers matches[]  @relation("matches_swiperTousers")
+  matches_matches_swipedTousers matches[]  @relation("matches_swipedTousers")
+  pictures                      pictures[]
+  sessions                      sessions[]
 }

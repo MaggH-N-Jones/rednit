@@ -17,7 +17,7 @@ export class PrismaDatabase implements Database {
 
     public async userWithUsernameExist(username: string): Result<boolean> {
         try {
-            const user = await this.client.user.findFirst({
+            const user = await this.client.users.findFirst({
                 where: {
                     username: {
                         equals: username,
@@ -32,7 +32,7 @@ export class PrismaDatabase implements Database {
 
     public async addUser(user: User): Result<void> {
         try {
-            await this.client.user.create({
+            await this.client.users.create({
                 data: user,
             })
             return ok(undefined);
@@ -43,7 +43,7 @@ export class PrismaDatabase implements Database {
 
     public async uniqueUserId(): Result<number> {
         try {
-            const allUsers = await this.client.user.findMany({});
+            const allUsers = await this.client.users.findMany({});
             let nextId = 0;
             for (const user of allUsers)
                 if (nextId <= user.id)
@@ -56,7 +56,7 @@ export class PrismaDatabase implements Database {
 
     public async userById(userId: number): Result<User | null> {
         try {
-            return ok(await this.client.user.findFirst({
+            return ok(await this.client.users.findFirst({
                 where: {
                     id: {
                         equals: userId,
@@ -70,7 +70,7 @@ export class PrismaDatabase implements Database {
 
     public async userByUsername(username: string): Result<User | null> {
         try {
-            return ok(await this.client.user.findFirst({
+            return ok(await this.client.users.findFirst({
                 where: {
                     username: {
                         equals: username,
@@ -84,7 +84,7 @@ export class PrismaDatabase implements Database {
 
     public async allUsersExceptWithId(id: number): Result<User[]> {
         try {
-            return ok(await this.client.user.findMany({
+            return ok(await this.client.users.findMany({
                 where: {
                     id: {
                         not: {
@@ -99,7 +99,7 @@ export class PrismaDatabase implements Database {
     }
     public async addSession(session: Session): Result<void> {
         try {
-            await this.client.session.create({
+            await this.client.sessions.create({
                 data: session,
             })
             return ok(undefined)
@@ -109,7 +109,7 @@ export class PrismaDatabase implements Database {
     }
     public async uniqueSessionId(): Result<number> {
         try {
-            const allSessions = await this.client.session.findMany({});
+            const allSessions = await this.client.sessions.findMany({});
             let nextId = 0;
             for (const session of allSessions)
                 if (nextId <= session.id)
@@ -121,7 +121,7 @@ export class PrismaDatabase implements Database {
     }
     public async sessionByToken(token: string): Result<Session | null> {
         try {
-            return ok(await this.client.session.findFirst({
+            return ok(await this.client.sessions.findFirst({
                 where: {
                     token: {
                         equals: token,
@@ -135,7 +135,7 @@ export class PrismaDatabase implements Database {
 
     public async addMatch(match: Match): Result<void> {
         try {
-            await this.client.match.create({
+            await this.client.matches.create({
                 data: match,
             })
             return ok(undefined);
@@ -145,7 +145,7 @@ export class PrismaDatabase implements Database {
     }
     public async uniqueMatchId(): Result<number> {
         try {
-            const allMatches = await this.client.match.findMany({});
+            const allMatches = await this.client.matches.findMany({});
             let nextId = 0;
             for (const match of allMatches)
                 if (nextId <= match.id)
