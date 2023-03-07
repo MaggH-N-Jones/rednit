@@ -164,4 +164,3 @@ export class PrismaDatabaseError implements DatabaseError {
         return this.messageText;
     }
 }
-
