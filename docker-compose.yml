@@ -11,3 +11,8 @@ services:
       MYSQL_ROOT_HOST: "%"
     volumes:
       - ./mariadb:/docker-entrypoint-initdb.d
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
