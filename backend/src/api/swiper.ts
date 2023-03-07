@@ -31,7 +31,7 @@ export function swiperMatchRoute(app: Express, db: Database) {
     app.post("/api/swiper/match", async (req, res) => {
         if (
             !req.body.token || typeof req.body.token !== "string"
-            || !req.body.swiped || typeof req.body.swiped !== "string"
+            || typeof req.body.swiped !== "number"
         ) {
             return res.status(400).json({
                 ok: false,

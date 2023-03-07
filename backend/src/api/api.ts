@@ -1,7 +1,9 @@
 import cors from "cors";
 import express, { json, urlencoded } from "express";
 import { ErrorRequestHandler } from "express";
+import { join } from "path";
 import { Database } from "../database/Database";
+import { swiperRoutes } from "./swiper";
 import { usersRoutes } from "./users";
 
 export function api(db: Database) {
@@ -14,6 +16,9 @@ export function api(db: Database) {
     app.use(jsonError());
 
     usersRoutes(app, db);
+    swiperRoutes(app, db);
+
+    app.use("/", express.static(join(__dirname, "../../../webapp")))
 
     app.listen(port, () => {
         console.log(`Express running at http://localhost:${port}`);
